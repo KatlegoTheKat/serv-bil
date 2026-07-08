@@ -27,6 +27,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3000;
 
-  await app.listen(port);
+  // 👇 Bind to 0.0.0.0 so OpenShift can reach it
+  await app.listen(port, '0.0.0.0');
 }
 void bootstrap();
