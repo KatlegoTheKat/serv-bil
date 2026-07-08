@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "Billing Service API",
+    "description": "Postman collection for the Billing Service technical assessment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Currency",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"currency\": \"USD\",\n  \"monthlyFeeGbp\": 20\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/currencies",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["currencies"]
+        }
+      }
+    },
+    {
+      "name": "Duplicate Currency",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"currency\": \"USD\",\n  \"monthlyFeeGbp\": 30\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/currencies",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["currencies"]
+        }
+      }
+    },
+    {
+      "name": "Create Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": \"ACC001\",\n  \"currency\": \"USD\",\n  \"transactionThreshold\": 100,\n  \"discountDays\": 30,\n  \"discountRate\": 20\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/accounts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["accounts"]
+        }
+      }
+    },
+    {
+      "name": "Duplicate Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": \"ACC001\",\n  \"currency\": \"USD\",\n  \"transactionThreshold\": 50,\n  \"discountDays\": 10,\n  \"discountRate\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/accounts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["accounts"]
+        }
+      }
+    },
+    {
+      "name": "Calculate Bill",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"billingPeriodStart\": \"2025-06-01\",\n  \"billingPeriodEnd\": \"2025-06-30\",\n  \"transactionCount\": 150\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/accounts/ACC001/bill",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["accounts", "ACC001", "bill"]
+        }
+      }
+    },
+    {
+      "name": "Invalid Billing Dates",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"billingPeriodStart\": \"2025-06-30\",\n  \"billingPeriodEnd\": \"2025-06-01\",\n  \"transactionCount\": 150\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/accounts/ACC001/bill",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["accounts", "ACC001", "bill"]
+        }
+      }
+    },
+    {
+      "name": "Account Not Found",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "x-api-key", "value": "secret-billing-api-key" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"billingPeriodStart\": \"2025-06-01\",\n  \"billingPeriodEnd\": \"2025-06-30\",\n  \"transactionCount\": 150\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/accounts/MISSING_ACC/bill",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["accounts", "MISSING_ACC", "bill"]
+        }
+      }
+    }
+  ]
+}
