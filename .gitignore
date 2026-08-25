@@ -5,3 +5,10 @@ coverage
 .github
 *.log
 .env
+
+# Sensitive files
+nano
+*.pem
+*.key
+id_rsa*
+.ssh/
