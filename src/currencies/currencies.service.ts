@@ -3,13 +3,15 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { CurrenciesRepository } from '../repositories/currencies.repository';
+import { ICurrenciesRepository } from '../repositories/interfaces/currencies-repository.interface';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { Currency } from './models/currency.model';
 
 @Injectable()
 export class CurrenciesService {
-  constructor(private readonly currenciesRepository: CurrenciesRepository) {}
+  constructor(
+    private readonly currenciesRepository: ICurrenciesRepository,
+  ) {}
 
   create(createCurrencyDto: CreateCurrencyDto): Currency {
     const existing = this.currenciesRepository.findByCode(
@@ -36,5 +38,9 @@ export class CurrenciesService {
       throw new NotFoundException(`Currency ${code} not found`);
     }
     return currency;
+  }
+
+  findAll(): Currency[] {
+    return this.currenciesRepository.findAll();
   }
 }

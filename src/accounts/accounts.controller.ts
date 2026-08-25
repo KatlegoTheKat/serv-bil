@@ -1,9 +1,10 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBody,
+  ApiParam,
   ApiSecurity,
 } from '@nestjs/swagger';
 import { AccountsService } from './accounts.service';
@@ -15,6 +16,36 @@ import { Account } from './models/account.model';
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'List all accounts',
+    description: 'Returns all registered accounts.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of accounts',
+    type: [Account],
+  })
+  findAll(): Account[] {
+    return this.accountsService.findAll();
+  }
+
+  @Get(':accountId')
+  @ApiOperation({
+    summary: 'Get an account by ID',
+    description: 'Returns a single account by its unique ID.',
+  })
+  @ApiParam({ name: 'accountId', description: 'Unique account identifier' })
+  @ApiResponse({
+    status: 200,
+    description: 'Account found',
+    type: Account,
+  })
+  @ApiResponse({ status: 404, description: 'Account not found' })
+  findById(@Param('accountId') accountId: string): Account {
+    return this.accountsService.findById(accountId);
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

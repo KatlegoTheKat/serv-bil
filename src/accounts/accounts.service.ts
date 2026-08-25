@@ -3,7 +3,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { AccountsRepository } from '../repositories/accounts.repository';
+import { IAccountsRepository } from '../repositories/interfaces/accounts-repository.interface';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { Account } from './models/account.model';
 import { CurrenciesService } from '../currencies/currencies.service';
@@ -11,7 +11,7 @@ import { CurrenciesService } from '../currencies/currencies.service';
 @Injectable()
 export class AccountsService {
   constructor(
-    private readonly accountsRepository: AccountsRepository,
+    private readonly accountsRepository: IAccountsRepository,
     private readonly currenciesService: CurrenciesService,
   ) {}
 
@@ -43,5 +43,9 @@ export class AccountsService {
       throw new NotFoundException(`Account ${accountId} not found`);
     }
     return account;
+  }
+
+  findAll(): Account[] {
+    return this.accountsRepository.findAll();
   }
 }

@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
 // Use default import for supertest since tsconfig esModuleInterop might be off/on depending on Nest versions
@@ -19,7 +18,7 @@ describe('Billing Service API (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     // We must mirror the global pipes used in main.ts
     app.useGlobalPipes(
       new ValidationPipe({
@@ -75,6 +74,38 @@ describe('Billing Service API (e2e)', () => {
     });
   });
 
+  describe('/currencies (GET)', () => {
+    it('should return all currencies', () => {
+      return supertest(app.getHttpServer())
+        .get('/currencies')
+        .set('x-api-key', API_KEY)
+        .expect(200)
+        .expect((res: any) => {
+          expect(Array.isArray(res.body)).toBe(true);
+          expect(res.body.length).toBeGreaterThanOrEqual(1);
+          expect(res.body[0].currency).toEqual('USD');
+        });
+    });
+
+    it('should return a specific currency by code', () => {
+      return supertest(app.getHttpServer())
+        .get('/currencies/USD')
+        .set('x-api-key', API_KEY)
+        .expect(200)
+        .expect((res: any) => {
+          expect(res.body.currency).toEqual('USD');
+          expect(res.body.monthlyFeeGbp).toEqual(20);
+        });
+    });
+
+    it('should return 404 for non-existent currency', () => {
+      return supertest(app.getHttpServer())
+        .get('/currencies/XYZ')
+        .set('x-api-key', API_KEY)
+        .expect(404);
+    });
+  });
+
   describe('/accounts (POST)', () => {
     it('should successfully create an account for an existing currency', () => {
       return supertest(app.getHttpServer())
@@ -120,6 +151,37 @@ describe('Billing Service API (e2e)', () => {
           discountRate: 20
         })
         .expect(409);
+    });
+  });
+
+  describe('/accounts (GET)', () => {
+    it('should return all accounts', () => {
+      return supertest(app.getHttpServer())
+        .get('/accounts')
+        .set('x-api-key', API_KEY)
+        .expect(200)
+        .expect((res: any) => {
+          expect(Array.isArray(res.body)).toBe(true);
+          expect(res.body.length).toBeGreaterThanOrEqual(1);
+        });
+    });
+
+    it('should return a specific account by ID', () => {
+      return supertest(app.getHttpServer())
+        .get('/accounts/ACC001')
+        .set('x-api-key', API_KEY)
+        .expect(200)
+        .expect((res: any) => {
+          expect(res.body.accountId).toEqual('ACC001');
+          expect(res.body.currency).toEqual('USD');
+        });
+    });
+
+    it('should return 404 for non-existent account', () => {
+      return supertest(app.getHttpServer())
+        .get('/accounts/NONEXISTENT')
+        .set('x-api-key', API_KEY)
+        .expect(404);
     });
   });
 

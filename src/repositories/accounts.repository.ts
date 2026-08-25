@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Account } from '../accounts/models/account.model';
+import { IAccountsRepository } from './interfaces/accounts-repository.interface';
 
 @Injectable()
-export class AccountsRepository {
+export class AccountsRepository extends IAccountsRepository {
   private readonly accounts: Map<string, Account> = new Map();
 
   save(account: Account): void {

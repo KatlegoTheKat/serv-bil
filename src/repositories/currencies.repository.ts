@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Currency } from '../currencies/models/currency.model';
+import { ICurrenciesRepository } from './interfaces/currencies-repository.interface';
 
 @Injectable()
-export class CurrenciesRepository {
+export class CurrenciesRepository extends ICurrenciesRepository {
   private readonly currencies: Map<string, Currency> = new Map();
 
   save(currency: Currency): void {
